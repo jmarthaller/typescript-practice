@@ -1,4 +1,3 @@
-function greet(person, date) {
-    console.log("Hellooooooooooo " + person + ", today is " + date);
+function firstElement(arr) {
+    return arr[0];
 }
-greet("Brendan", "Monday");
