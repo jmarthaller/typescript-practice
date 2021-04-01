@@ -1,4 +1,4 @@
 function greet(person, date) {
-    console.log("Helloo " + person + ", today is " + date);
+    console.log("Hellooooooooooo " + person + ", today is " + date);
 }
 greet("Brendan", "Monday");
