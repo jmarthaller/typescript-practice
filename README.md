@@ -1,4 +1,4 @@
 # typescript-practice
 
 
-A simple TypeScript project for educational purposes
+A sandbox repo to teach myself TypeScript.
