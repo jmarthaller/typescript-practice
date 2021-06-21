@@ -1,0 +1,30 @@
+{
+  "name": "typescript-practice",
+  "version": "1.0.0",
+  "description": "This repo will be used for coding along with [this](https://www.youtube.com/watch?v=I6ypD7qv3Z8&list=WL&index=1) YouTube tutorial. Will serve as my portfolio site when finished.",
+  "main": "hello.js",
+  "scripts": {
+    "watch": "tsc -w",
+    "start2": "ts-node src/hello.ts",
+    "dev": "nodemon dist/hello.js",
+    "dev2": "nodemon --exec ts-node src/hello.ts",
+    "start": "node dist/hello.js", 
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmarthaller/typescript-practice.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jmarthaller/typescript-practice/issues"
+  },
+  "homepage": "https://github.com/jmarthaller/typescript-practice#readme",
+  "devDependencies": {
+    "@types/node": "^15.12.4",
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.4"
+  }
+}
