@@ -13,7 +13,8 @@ import microConfig from './mikro-orm.config'
 
 const main = async () => {
     const orm = await MikroORM.init(microConfig);
-
+    orm.getMigrator().up();
+    
     const post = orm.em.create(Post, { title: 'my posts'});
     await orm.em.persistAndFlush(post);
 }
