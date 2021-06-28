@@ -8,6 +8,8 @@ import { buildSchema } from "type-graphql";
 import { HelloResolver } from "./resolvers/hello";
 
 const main = async () => {
+    const orm = await MikroORM.init(microConfig);
+    orm.getMigrator().up();
     
     const app = express();
     
@@ -25,8 +27,6 @@ const main = async () => {
     })
     // const post = orm.em.create(Post, { title: 'amy'});
     // await orm.em.persistAndFlush(post);
-    const orm = await MikroORM.init(microConfig);
-    orm.getMigrator().up();
     
 }
 main()
