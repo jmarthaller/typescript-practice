@@ -2,13 +2,13 @@
   "name": "typescript-practice",
   "version": "1.0.0",
   "description": "This repo will be used for coding along with [this](https://www.youtube.com/watch?v=I6ypD7qv3Z8&list=WL&index=1) YouTube tutorial. Will serve as my portfolio site when finished.",
-  "main": "hello.js",
+  "main": "index.js",
   "scripts": {
     "watch": "tsc -w",
-    "start2": "ts-node src/hello.ts",
-    "dev": "nodemon dist/hello.js",
-    "dev2": "nodemon --exec ts-node src/hello.ts",
-    "start": "node dist/hello.js",
+    "start2": "ts-node src/index.ts",
+    "dev": "nodemon dist/index.js",
+    "dev2": "nodemon --exec ts-node src/index.ts",
+    "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/jmarthaller/typescript-practice#readme",
   "devDependencies": {
+    "@types/express": "^4.17.12",
     "@types/node": "^15.12.4",
     "ts-node": "^10.0.0",
     "typescript": "^4.3.4"
@@ -32,7 +33,11 @@
     "@mikro-orm/core": "^4.5.6",
     "@mikro-orm/migrations": "^4.5.6",
     "@mikro-orm/postgresql": "^4.5.6",
-    "pg": "^8.6.0"
+    "apollo-server-express": "^2.25.2",
+    "express": "^4.17.1",
+    "graphql": "^15.5.1",
+    "pg": "^8.6.0",
+    "type-graphql": "^1.1.1"
   },
   "mikro-orm": {
     "useTsNode": true,
