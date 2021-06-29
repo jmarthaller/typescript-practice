@@ -36,7 +36,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
     });
     const orm = yield core_1.MikroORM.init(mikro_orm_config_1.default);
     orm.getMigrator().up();
-    const post = orm.em.create(Post_1.Post, { title: 'amy' });
+    const post = orm.em.create(Post_1.Post, { title: 'jenna' });
     yield orm.em.persistAndFlush(post);
 });
 main();

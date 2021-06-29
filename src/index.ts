@@ -30,7 +30,7 @@ const main = async () => {
     
     const orm = await MikroORM.init(microConfig);
     orm.getMigrator().up();
-    const post = orm.em.create(Post, { title: 'amy'});
+    const post = orm.em.create(Post, { title: 'jenna'});
     await orm.em.persistAndFlush(post);
 }
 main()
