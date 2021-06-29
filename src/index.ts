@@ -1,23 +1,24 @@
-import {MikroORM } from "@mikro-orm/core";
+import { MikroORM } from "@mikro-orm/core";
+import 'reflect-metadata';
 import { __prod__ } from "./constants";
-// import { Post } from "./entities/Post";
+import { Post } from "./entities/Post";
 import microConfig from "./mikro-orm.config";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { HelloResolver } from "./resolvers/hello";
+import { PostResolver } from "./resolvers/post";
 
 const main = async () => {
-    const orm = await MikroORM.init(microConfig);
-    orm.getMigrator().up();
     
     const app = express();
     
     const apolloServer = new ApolloServer({
         schema: await buildSchema({
-            resolvers: [HelloResolver],
-            validate: false
-        })
+            resolvers: [HelloResolver, PostResolver],
+            validate: false,
+        }),
+        context: () => ({ em: orm.em })
     });
     
     apolloServer.applyMiddleware({ app });
@@ -25,9 +26,12 @@ const main = async () => {
     app.listen(4000, () => {
         console.log('server started on localhost:4000')
     })
-    // const post = orm.em.create(Post, { title: 'amy'});
-    // await orm.em.persistAndFlush(post);
+
     
+    const orm = await MikroORM.init(microConfig);
+    orm.getMigrator().up();
+    const post = orm.em.create(Post, { title: 'amy'});
+    await orm.em.persistAndFlush(post);
 }
 main()
 
