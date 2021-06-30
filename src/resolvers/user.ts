@@ -99,8 +99,7 @@ export class UserResolver {
                 ],
             };
         }
-        // check this later for why couldn't save as req.session.userId
-        // can't save userId to the req session, why?
+        // changed type to accept any
         req.session.userId = user.id;
 
 

@@ -37,8 +37,8 @@ const main = async () => {
             maxAge: 1000 * 60 * 60 * 24 * 365 * 5,
             httpOnly: true,
             sameSite: "lax",
-            // check later if this causes tricky bugs
-            secure: __prod__
+            // set to __prod__ or true in production
+            secure: false
         },
         saveUninitialized: false,
         secret: 'ChatifyChatify',
