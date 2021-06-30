@@ -75,9 +75,8 @@ export class UserResolver {
     @Mutation(() => UserResponse)
     async login(
         @Arg('options') options: UsernamePasswordInput,
-        @Ctx() { em }: MyContext
-    ): Promise<UserResponse>
-    {
+        @Ctx() { em, req }: MyContext
+    ): Promise<UserResponse> {
         const user = await em.findOne(User, { username: options.username });
         if (!user) {
             return  {
@@ -100,6 +99,11 @@ export class UserResolver {
                 ],
             };
         }
+        // check this later for why couldn't save as req.session.userId
+        // can't save userId to the req session, why?
+        req.session.userId = user.id;
+
+
         return {
             user,
         };
