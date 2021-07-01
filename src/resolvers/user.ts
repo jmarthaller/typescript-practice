@@ -4,6 +4,7 @@ import { Resolver, Mutation, Arg, InputType, Field, Ctx, ObjectType, Query } fro
 import argon2 from 'argon2';
 import { EntityManager } from '@mikro-orm/postgresql'
 
+
 @InputType()
 class UsernamePasswordInput {
     @Field()
@@ -126,12 +127,27 @@ export class UserResolver {
         }
         // changed type to accept any
         req.session.userId = user.id;
-
-
         return {
             user,
         };
     }
+
+
+    @Mutation(() => Boolean)
+    logout(
+        @Ctx() {req, res}: MyContext 
+    ){
+        return new Promise(resolve => req.session.destroy((err: any) => {
+            res.clearCookie("qid");
+            if (err) {
+                console.log(err);
+                resolve(false);
+                return;
+            }
+            resolve(true);
+        }))
+    }
+    
 }
 
 
