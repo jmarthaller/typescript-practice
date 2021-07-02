@@ -41,7 +41,8 @@ export class UserResolver {
                     message: "length of password must be longer than 1 character",
                 }]
         }}
-        const userID = await redis.get(FORGOT_PASSWORD_PREFIX + token)
+        const key = FORGOT_PASSWORD_PREFIX + token;
+        const userID = await redis.get(key)
         if (!userID) {
             return {
                 errors: [{
@@ -63,6 +64,7 @@ export class UserResolver {
         }
         user.password = await argon2.hash(newPassword);
         await em.persistAndFlush(user);
+        await redis.del(key);
         req.session.userId = user.id;
         return { user };
     }
