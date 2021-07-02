@@ -5,6 +5,9 @@ import argon2 from 'argon2';
 import { EntityManager } from '@mikro-orm/postgresql'
 import { UsernamePasswordInput } from './UsernamePasswordInput';
 import { validateRegister } from '../utils/validateRegister';
+import { sendEmail } from '../utils/sendEmail';
+import { v4 } from 'uuid';
+import { FORGOT_PASSWORD_PREFIX } from '../constants';
 
 
 @ObjectType()
@@ -14,7 +17,6 @@ class FieldError {
     @Field()
     message: string;
 }
-
 
 @ObjectType()
 class UserResponse {
@@ -30,9 +32,15 @@ export class UserResolver {
     @Mutation(() => Boolean)
     async forgotPassword(
         @Arg('email') email: string,
-        @Ctx() { em } : MyContext
+        @Ctx() { em, redis } : MyContext
     ) {
-        // const user = await em.findOne(User, { email });
+        const user = await em.findOne(User, { email });
+        if (!user) {
+            return true;
+        }   
+        const token = v4();
+        await redis.set(FORGOT_PASSWORD_PREFIX + token, user.id, 'ex', 1000 * 60 * 60 * 72);
+        await sendEmail(email, `<a href="http://localhost:3000/change-password/${token}">Reset Your Password<a>`);
         return true;
     }
 
