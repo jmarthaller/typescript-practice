@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, BaseEntity } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, BaseEntity, ManyToOne } from 'typeorm';
 import { Field, ObjectType, Int } from "type-graphql";
+import { User } from './User';
 
 
 @ObjectType()
@@ -13,6 +14,13 @@ export class Post extends BaseEntity {
     @CreateDateColumn()
     createdAt: Date;
 
+    @Field()
+    @Column()
+    CreatorId: number;
+    
+    @ManyToOne(() => User, user => user.posts)
+    creator: User;
+
     @Field(() => String)
     @UpdateDateColumn()
     updatedAt: Date;
@@ -20,4 +28,12 @@ export class Post extends BaseEntity {
     @Field()
     @Column()
     title!: string;
+
+    @Field()
+    @Column()
+    text!: string;
+
+    @Field()
+    @Column({type: 'int', default: 0})
+    points!: number;
 }
