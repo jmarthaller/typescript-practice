@@ -1,6 +1,7 @@
 // import { MyContext } from 'src/types';
+import { isAuth } from '../middleware/isAuth';
 import { MyContext } from 'src/types';
-import { Resolver, Query, Arg, Int, Mutation, InputType, Field, Ctx } from 'type-graphql';
+import { Resolver, Query, Arg, Int, Mutation, InputType, Field, Ctx, UseMiddleware } from 'type-graphql';
 import { Post } from '../entities/Post';
 // import { sleep } from '../utils/sleep';
 
@@ -26,15 +27,12 @@ export class PostResolver {
     }
 
     @Mutation(() => Post)
+    @UseMiddleware(isAuth)
     async createPost(
         @Arg("input") input: PostInput,
         @Ctx() { req }: MyContext
         ): Promise<Post> {
 
-        if (!req.session.userId) {
-            throw new Error("you are not logged in!")
-        }    
-        
         return Post.create({
             ...input,
             CreatorId: req.session.userId,
