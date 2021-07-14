@@ -42,11 +42,18 @@ PostInput = __decorate([
 let PostResolver = class PostResolver {
     posts(limit, cursor) {
         return __awaiter(this, void 0, void 0, function* () {
-            return typeorm_1.getConnection()
+            const realLimit = Math.min(50, limit);
+            const qb = typeorm_1.getConnection()
                 .getRepository(Post_1.Post)
                 .createQueryBuilder("post")
-                .orderBy('"createdAt"')
-                .getMany();
+                .orderBy('"createdAt"', "DESC")
+                .take(realLimit);
+            if (cursor) {
+                qb.where('"createdAt" < :cursor', {
+                    cursor: new Date(parseInt(cursor))
+                });
+            }
+            return qb.getMany();
         });
     }
     post(id) {
@@ -78,8 +85,8 @@ let PostResolver = class PostResolver {
 };
 __decorate([
     type_graphql_1.Query(() => [Post_1.Post]),
-    __param(0, type_graphql_1.Arg('limit')),
-    __param(1, type_graphql_1.Arg('cursor', () => String, { nullable: true })),
+    __param(0, type_graphql_1.Arg("limit")),
+    __param(1, type_graphql_1.Arg("cursor", () => String, { nullable: true })),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
