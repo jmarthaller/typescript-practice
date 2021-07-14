@@ -64,30 +64,37 @@ let UserResolver = class UserResolver {
     changePassword(token, newPassword, { redis, req }) {
         return __awaiter(this, void 0, void 0, function* () {
             if (newPassword.length <= 1) {
-                return { errors: [{
+                return {
+                    errors: [
+                        {
                             field: "newPassword",
                             message: "length of password must be longer than 1 character",
-                        }]
+                        },
+                    ],
                 };
             }
             const key = constants_1.FORGOT_PASSWORD_PREFIX + token;
             const userID = yield redis.get(key);
             if (!userID) {
                 return {
-                    errors: [{
+                    errors: [
+                        {
                             field: "token",
                             message: "token expired",
-                        }]
+                        },
+                    ],
                 };
             }
             const userIdNum = parseInt(userID);
             const user = yield User_1.User.findOne(userIdNum);
             if (!user) {
                 return {
-                    errors: [{
+                    errors: [
+                        {
                             field: "token",
                             message: "User not found",
-                        }]
+                        },
+                    ],
                 };
             }
             yield User_1.User.update({ id: userIdNum }, {
@@ -105,7 +112,7 @@ let UserResolver = class UserResolver {
                 return true;
             }
             const token = uuid_1.v4();
-            yield redis.set(constants_1.FORGOT_PASSWORD_PREFIX + token, user.id, 'ex', 1000 * 60 * 60 * 72);
+            yield redis.set(constants_1.FORGOT_PASSWORD_PREFIX + token, user.id, "ex", 1000 * 60 * 60 * 72);
             yield sendEmail_1.sendEmail(email, `<a href="http://localhost:3000/change-password/${token}">Reset Your Password<a>`);
             return true;
         });
@@ -122,25 +129,31 @@ let UserResolver = class UserResolver {
             if (errors) {
                 return { errors };
             }
-            ;
             const hashedPassword = yield argon2_1.default.hash(options.password);
             let user;
             try {
-                const result = yield typeorm_1.getConnection().createQueryBuilder().insert().into(User_1.User).values({
+                const result = yield typeorm_1.getConnection()
+                    .createQueryBuilder()
+                    .insert()
+                    .into(User_1.User)
+                    .values({
                     username: options.username,
                     password: hashedPassword,
                     email: options.email,
                 })
-                    .returning("*").execute();
+                    .returning("*")
+                    .execute();
                 user = result.raw[0];
             }
             catch (err) {
                 if (err.code === "23305" || err.detail.includes("already exists")) {
                     return {
-                        errors: [{
+                        errors: [
+                            {
                                 field: "username",
                                 message: "username already taken",
-                            }]
+                            },
+                        ],
                     };
                 }
             }
@@ -150,7 +163,9 @@ let UserResolver = class UserResolver {
     }
     login(usernameOrEmail, password, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield User_1.User.findOne(usernameOrEmail.includes("@") ? { where: { email: usernameOrEmail } } : { where: { username: usernameOrEmail } });
+            const user = yield User_1.User.findOne(usernameOrEmail.includes("@")
+                ? { where: { email: usernameOrEmail } }
+                : { where: { username: usernameOrEmail } });
             if (!user) {
                 return {
                     errors: [
@@ -179,7 +194,7 @@ let UserResolver = class UserResolver {
         });
     }
     logout({ req, res }) {
-        return new Promise(resolve => req.session.destroy((err) => {
+        return new Promise((resolve) => req.session.destroy((err) => {
             res.clearCookie("qid");
             if (err) {
                 console.log(err);
@@ -192,8 +207,8 @@ let UserResolver = class UserResolver {
 };
 __decorate([
     type_graphql_1.Mutation(() => UserResponse),
-    __param(0, type_graphql_1.Arg('token')),
-    __param(1, type_graphql_1.Arg('newPassword')),
+    __param(0, type_graphql_1.Arg("token")),
+    __param(1, type_graphql_1.Arg("newPassword")),
     __param(2, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String, Object]),
@@ -201,7 +216,7 @@ __decorate([
 ], UserResolver.prototype, "changePassword", null);
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
-    __param(0, type_graphql_1.Arg('email')),
+    __param(0, type_graphql_1.Arg("email")),
     __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
@@ -216,7 +231,7 @@ __decorate([
 ], UserResolver.prototype, "me", null);
 __decorate([
     type_graphql_1.Mutation(() => UserResponse),
-    __param(0, type_graphql_1.Arg('options')),
+    __param(0, type_graphql_1.Arg("options")),
     __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [UsernamePasswordInput_1.UsernamePasswordInput, Object]),
@@ -224,8 +239,8 @@ __decorate([
 ], UserResolver.prototype, "register", null);
 __decorate([
     type_graphql_1.Mutation(() => UserResponse),
-    __param(0, type_graphql_1.Arg('usernameOrEmail')),
-    __param(1, type_graphql_1.Arg('password')),
+    __param(0, type_graphql_1.Arg("usernameOrEmail")),
+    __param(1, type_graphql_1.Arg("password")),
     __param(2, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String, Object]),
