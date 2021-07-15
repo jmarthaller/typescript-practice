@@ -15,7 +15,6 @@ import { Post } from "./entities/Post";
 import { User } from "./entities/User";
 import path from 'path';
 
-// rerun this for newest migration
 const main = async () => {
   const connection = await createConnection({
     type: "postgres",
