@@ -1,3 +1,3 @@
-# Full-Stack React GraphQL TypeScript
+# Full-Stack React GraphQL TypeScript (Backend)
 
-This repo is based on [this](https://www.youtube.com/watch?v=I6ypD7qv3Z8&list=WL&index=1) YouTube tutorial, building a Reddit clone with React, GraphQL, and TypeScript. The finished product will serve as the portfolio site for my personal projects.
+Backend for a project based on [this](https://www.youtube.com/watch?v=I6ypD7qv3Z8&list=WL&index=1) YouTube tutorial. The finished product will be a Reddit clone and will serve as the portfolio site for my personal projects, built using React, GraphQL, and TypeScript.
