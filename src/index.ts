@@ -1,19 +1,20 @@
+
 import "reflect-metadata";
-import { __prod__ } from "./constants";
 import express from "express";
+import Redis from "ioredis";
+import session from "express-session";
+import connectRedis from "connect-redis";
+import cors from "cors";
+import path from 'path';
+import { __prod__ } from "./constants";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
 import { UserResolver } from "./resolvers/user";
-import Redis from "ioredis";
-import session from "express-session";
-import connectRedis from "connect-redis";
-import cors from "cors";
 import { createConnection } from "typeorm";
 import { Post } from "./entities/Post";
 import { User } from "./entities/User";
-import path from 'path';
 
 const main = async () => {
   const connection = await createConnection({
