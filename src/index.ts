@@ -6,13 +6,13 @@ import session from "express-session";
 import connectRedis from "connect-redis";
 import cors from "cors";
 import path from 'path';
-import { __prod__ } from "./constants";
+import { createConnection } from "typeorm";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
 import { UserResolver } from "./resolvers/user";
-import { createConnection } from "typeorm";
+import { __prod__ } from "./constants";
 import { Post } from "./entities/Post";
 import { User } from "./entities/User";
 
