@@ -71,7 +71,10 @@ let PostResolver = class PostResolver {
                 });
             }
             const posts = yield qb.getMany();
-            return { posts: posts.slice(0, realLimit), hasMore: posts.length === realLimitPlusOne };
+            return {
+                posts: posts.slice(0, realLimit),
+                hasMore: posts.length === realLimitPlusOne
+            };
         });
     }
     post(id) {
