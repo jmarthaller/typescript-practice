@@ -16,7 +16,7 @@ import {
 } from "type-graphql";
 import { Post } from "../entities/Post";
 import { getConnection } from "typeorm";
-import { Upvote } from "../entities/Upvote";
+// import { Upvote } from "../entities/Upvote";
 
 @InputType()
 class PostInput {
@@ -53,16 +53,20 @@ export class PostResolver {
     const isUpvote = value !== -1; 
     const realValue = isUpvote ? 1 : -1;
     const { userId } = req.session;
-    await Upvote.insert({
-      userId,
-      postId, 
-      value: realValue,
-    });
+    // await Upvote.insert({
+    //   userId,
+    //   postId, 
+    //   value: realValue,
+    // });
     await getConnection().query(`
-      update post p
-      set points = points + $1
-      where p.id = $2
-    `, [realValue, postId])
+      START TRANSACTION;
+      insert into upvote ("userId", "postId", value)
+      values (${userId},${postId},${realValue});
+      update post
+      set points = points + ${realValue}
+      where id = ${postId};
+      COMMIT;
+    `);
 
     return true;
   }

@@ -15,6 +15,7 @@ import { UserResolver } from "./resolvers/user";
 import { __prod__ } from "./constants";
 import { Post } from "./entities/Post";
 import { User } from "./entities/User";
+import { Upvote } from "./entities/Upvote";
 
 const main = async () => {
   const connection = await createConnection({
@@ -25,7 +26,7 @@ const main = async () => {
     logging: true,
     synchronize: true,
     migrations: [path.join(__dirname, './migrations/* ')],
-    entities: [Post, User],
+    entities: [Post, User, Upvote],
   });
   await connection.runMigrations()
 

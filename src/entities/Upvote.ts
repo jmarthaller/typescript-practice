@@ -5,28 +5,24 @@ import {
     ManyToOne,
     PrimaryColumn,
   } from "typeorm";
-//   import { Field, ObjectType } from "type-graphql";
   import { User } from "./User";
 import { Post } from "./Post";
   
   @Entity()
   export class Upvote extends BaseEntity {
-    
     @Column({ type: "int" })
     value: number;
 
-    
     @PrimaryColumn()
     userId: number;
   
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, (user) => user.upvotes)
     user: User;
   
-    
     @PrimaryColumn()
     postId: number;
   
-    @ManyToOne(() => Post)
+    @ManyToOne(() => Post, (post) => post.upvotes)
     post: Post;
   
   }

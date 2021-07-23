@@ -26,7 +26,6 @@ const isAuth_1 = require("../middleware/isAuth");
 const type_graphql_1 = require("type-graphql");
 const Post_1 = require("../entities/Post");
 const typeorm_1 = require("typeorm");
-const Upvote_1 = require("../entities/Upvote");
 let PostInput = class PostInput {
 };
 __decorate([
@@ -62,16 +61,15 @@ let PostResolver = class PostResolver {
             const isUpvote = value !== -1;
             const realValue = isUpvote ? 1 : -1;
             const { userId } = req.session;
-            yield Upvote_1.Upvote.insert({
-                userId,
-                postId,
-                value: realValue,
-            });
             yield typeorm_1.getConnection().query(`
-      update post p
-      set points = points + $1
-      where p.id = $2
-    `, [realValue, postId]);
+      START TRANSACTION;
+      insert into upvote ("userId", "postId", value)
+      values (${userId},${postId},${realValue});
+      update post
+      set points = points + ${realValue}
+      where id = ${postId};
+      COMMIT;
+    `);
             return true;
         });
     }
