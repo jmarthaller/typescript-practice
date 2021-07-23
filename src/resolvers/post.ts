@@ -42,6 +42,7 @@ export class PostResolver {
     return root.text.slice(0, 50)
   }
 
+
   @Query(() => PaginatedPosts)
   async posts(
     @Arg("limit", () => Int) limit: number,
