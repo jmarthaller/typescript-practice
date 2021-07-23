@@ -6,11 +6,11 @@ import {
   UpdateDateColumn,
   BaseEntity,
   ManyToOne,
-  OneToMany,
+  // OneToMany,
 } from "typeorm";
 import { Field, ObjectType, Int } from "type-graphql";
 import { User } from "./User";
-import { Upvote } from "./Upvote";
+// import { Upvote } from "./Upvote";
 
 @ObjectType()
 @Entity()
@@ -39,8 +39,8 @@ export class Post extends BaseEntity {
   @Column()
   title!: string;
 
-  @OneToMany(() => Upvote, (upvote) => upvote.post)
-  upvotes: Upvote[];
+  // @OneToMany(() => Upvote, (upvote) => upvote.post)
+  // upvotes: Upvote[];
 
   @Field()
   @Column()

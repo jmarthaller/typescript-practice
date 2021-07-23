@@ -11,38 +11,31 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Upvote = void 0;
 const typeorm_1 = require("typeorm");
-const type_graphql_1 = require("type-graphql");
 const User_1 = require("./User");
 const Post_1 = require("./Post");
 let Upvote = class Upvote extends typeorm_1.BaseEntity {
 };
 __decorate([
-    type_graphql_1.Field(),
     typeorm_1.Column({ type: "int" }),
     __metadata("design:type", Number)
 ], Upvote.prototype, "value", void 0);
 __decorate([
-    type_graphql_1.Field(),
     typeorm_1.PrimaryColumn(),
     __metadata("design:type", Number)
 ], Upvote.prototype, "userId", void 0);
 __decorate([
-    type_graphql_1.Field(),
-    typeorm_1.ManyToOne(() => User_1.User, (user) => user.upvotes),
+    typeorm_1.ManyToOne(() => User_1.User),
     __metadata("design:type", User_1.User)
 ], Upvote.prototype, "user", void 0);
 __decorate([
-    type_graphql_1.Field(),
     typeorm_1.PrimaryColumn(),
     __metadata("design:type", Number)
 ], Upvote.prototype, "postId", void 0);
 __decorate([
-    type_graphql_1.Field(),
-    typeorm_1.ManyToOne(() => Post_1.Post, (post) => post.upvotes),
+    typeorm_1.ManyToOne(() => Post_1.Post),
     __metadata("design:type", Post_1.Post)
 ], Upvote.prototype, "post", void 0);
 Upvote = __decorate([
-    type_graphql_1.ObjectType(),
     typeorm_1.Entity()
 ], Upvote);
 exports.Upvote = Upvote;

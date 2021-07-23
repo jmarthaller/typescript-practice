@@ -16,6 +16,7 @@ import {
 } from "type-graphql";
 import { Post } from "../entities/Post";
 import { getConnection } from "typeorm";
+import { Upvote } from "../entities/Upvote";
 
 @InputType()
 class PostInput {
@@ -42,6 +43,29 @@ export class PostResolver {
     return root.text.slice(0, 50)
   }
 
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
+  async vote(
+    @Arg('postId' , () => Int) postId: number,
+    @Arg('value' , () => Int) value: number,
+    @Ctx() { req }: MyContext
+  ) {
+    const isUpvote = value !== -1; 
+    const realValue = isUpvote ? 1 : -1;
+    const { userId } = req.session;
+    await Upvote.insert({
+      userId,
+      postId, 
+      value: realValue,
+    });
+    await getConnection().query(`
+      update post p
+      set points = points + $1
+      where p.id = $2
+    `, [realValue, postId])
+
+    return true;
+  }
 
   @Query(() => PaginatedPosts)
   async posts(
