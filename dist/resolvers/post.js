@@ -96,7 +96,12 @@ let PostResolver = class PostResolver {
         return __awaiter(this, void 0, void 0, function* () {
             const realLimit = Math.min(50, limit);
             const realLimitPlusOne = realLimit + 1;
-            const replacements = [realLimitPlusOne, req.session.userId];
+            const replacements = [realLimitPlusOne];
+            let cursorIndex = 3;
+            if (req.session.userId) {
+                replacements.push(req.session.userId);
+                cursorIndex = replacements.length;
+            }
             if (cursor) {
                 replacements.push(new Date(parseInt(cursor)));
             }
@@ -112,7 +117,7 @@ let PostResolver = class PostResolver {
       ${req.session.userId ? '(select value from upvote where "userId" = $2 and "postId" = p.id) "voteStatus"' : 'null as "voteStatus"'}
       from post p
       inner join public.user u on u.id = p."CreatorId"
-      ${cursor ? `where p."createdAt" < $3 ` : ""}
+      ${cursor ? `where p."createdAt" < $${cursorIndex} ` : ""}
       order by p."createdAt" DESC
       limit $1
     `, replacements);
