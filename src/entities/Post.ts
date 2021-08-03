@@ -7,12 +7,10 @@ import {
   BaseEntity,
   ManyToOne,
   OneToMany,
-  // OneToMany,
 } from "typeorm";
 import { Field, ObjectType, Int } from "type-graphql";
 import { User } from "./User";
 import { Upvote } from "./Upvote";
-// import { Upvote } from "./Upvote";
 
 @ObjectType()
 @Entity()
