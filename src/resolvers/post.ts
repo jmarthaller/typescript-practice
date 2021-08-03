@@ -30,62 +30,68 @@ class PostInput {
 @ObjectType()
 class PaginatedPosts {
   @Field(() => [Post])
-  posts: Post[]
+  posts: Post[];
   @Field()
   hasMore: boolean;
 }
 
 @Resolver(Post)
 export class PostResolver {
-  @FieldResolver(() => String) 
-  textSnippet(
-    @Root() root: Post
-  ) {
-    return root.text.slice(0, 50)
+  @FieldResolver(() => String)
+  textSnippet(@Root() root: Post) {
+    return root.text.slice(0, 50);
   }
 
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   async vote(
-    @Arg('postId' , () => Int) postId: number,
-    @Arg('value' , () => Int) value: number,
+    @Arg("postId", () => Int) postId: number,
+    @Arg("value", () => Int) value: number,
     @Ctx() { req }: MyContext
   ) {
-    const isUpvote = value !== -1; 
+    const isUpvote = value !== -1;
     const realValue = isUpvote ? 1 : -1;
     const { userId } = req.session;
-    const upvote = await Upvote.findOne({where: { postId, userId }}) 
+    const upvote = await Upvote.findOne({ where: { postId, userId } });
 
     if (upvote && upvote.value !== realValue) {
       await getConnection().transaction(async (tm) => {
-        await tm.query(`
+        await tm.query(
+          `
           update upvote 
           set value = $1
           where "postId" = $2 and "userId" = $3
-        `, [realValue,postId,userId]);
+        `,
+          [realValue, postId, userId]
+        );
 
-
-        await tm.query(`
+        await tm.query(
+          `
           update post
           set points = points + $1
           where id = $2;
-        `, [2 * realValue, postId]);
-        })
-        
-
-
+        `,
+          [2 * realValue, postId]
+        );
+      });
     } else if (!upvote) {
-      await getConnection().transaction(async tm => {
-        await tm.query(`
+      await getConnection().transaction(async (tm) => {
+        await tm.query(
+          `
           insert into upvote ("userId", "postId", value)
           values ($1, $2, $3);
-        `, [userId,postId,realValue]);
+        `,
+          [userId, postId, realValue]
+        );
 
-        await tm.query(`
+        await tm.query(
+          `
           update post
           set points = points + $1
           where id = $2;
-        `, [realValue,postId]);
+        `,
+          [realValue, postId]
+        );
       });
     }
 
@@ -106,7 +112,7 @@ export class PostResolver {
   async posts(
     @Arg("limit", () => Int) limit: number,
     @Arg("cursor", () => String, { nullable: true }) cursor: string | null,
-    @Ctx() {req}: MyContext
+    @Ctx() { req }: MyContext
   ): Promise<PaginatedPosts> {
     const realLimit = Math.min(50, limit);
     const realLimitPlusOne = realLimit + 1;
@@ -116,15 +122,16 @@ export class PostResolver {
     let cursorIndex = 3;
 
     if (req.session.userId) {
-      replacements.push(req.session.userId)
+      replacements.push(req.session.userId);
       cursorIndex = replacements.length;
     }
 
     if (cursor) {
-      replacements.push(new Date(parseInt(cursor)))
+      replacements.push(new Date(parseInt(cursor)));
     }
 
-    const posts = await getConnection().query(`
+    const posts = await getConnection().query(
+      `
       select p.*, 
       json_build_object(
         'id', u.id,
@@ -133,36 +140,42 @@ export class PostResolver {
         'createdAt', u."createdAt",
         'updatedAt', u."updatedAt"
       ) Creator,
-      ${req.session.userId ? '(select value from upvote where "userId" = $2 and "postId" = p.id) "voteStatus"' : 'null as "voteStatus"'}
+      ${
+        req.session.userId
+          ? '(select value from upvote where "userId" = $2 and "postId" = p.id) "voteStatus"'
+          : 'null as "voteStatus"'
+      }
       from post p
       inner join public.user u on u.id = p."CreatorId"
       ${cursor ? `where p."createdAt" < $${cursorIndex} ` : ""}
       order by p."createdAt" DESC
       limit $1
-    `, replacements)
+    `,
+      replacements
+    );
 
     // const qb = getConnection()
     //   .getRepository(Post)
     //   .createQueryBuilder("post")
     //   .innerJoinAndSelect(
-    //     "post.creator", 
-    //     "u", 
+    //     "post.creator",
+    //     "u",
     //     'u.id = post."CreatorId"',
     //   )
     //   .orderBy('post."createdAt"', "DESC")
     //   .take(realLimitPlusOne);
 
     // if (cursor) {
-    //   qb.where('post."createdAt" < :cursor', { 
-    //     cursor: new Date(parseInt(cursor)) 
+    //   qb.where('post."createdAt" < :cursor', {
+    //     cursor: new Date(parseInt(cursor))
     //   });
     // }
 
     // const posts = await qb.getMany();
 
-    return { 
-      posts: posts.slice(0, realLimit), 
-      hasMore: posts.length === realLimitPlusOne 
+    return {
+      posts: posts.slice(0, realLimit),
+      hasMore: posts.length === realLimitPlusOne,
     };
   }
 
