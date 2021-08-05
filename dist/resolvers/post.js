@@ -114,7 +114,9 @@ let PostResolver = class PostResolver {
         'createdAt', u."createdAt",
         'updatedAt', u."updatedAt"
       ) Creator,
-      ${req.session.userId ? '(select value from upvote where "userId" = $2 and "postId" = p.id) "voteStatus"' : 'null as "voteStatus"'}
+      ${req.session.userId
+                ? '(select value from upvote where "userId" = $2 and "postId" = p.id) "voteStatus"'
+                : 'null as "voteStatus"'}
       from post p
       inner join public.user u on u.id = p."CreatorId"
       ${cursor ? `where p."createdAt" < $${cursorIndex} ` : ""}
@@ -123,7 +125,7 @@ let PostResolver = class PostResolver {
     `, replacements);
             return {
                 posts: posts.slice(0, realLimit),
-                hasMore: posts.length === realLimitPlusOne
+                hasMore: posts.length === realLimitPlusOne,
             };
         });
     }
@@ -164,8 +166,8 @@ __decorate([
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
     type_graphql_1.UseMiddleware(isAuth_1.isAuth),
-    __param(0, type_graphql_1.Arg('postId', () => type_graphql_1.Int)),
-    __param(1, type_graphql_1.Arg('value', () => type_graphql_1.Int)),
+    __param(0, type_graphql_1.Arg("postId", () => type_graphql_1.Int)),
+    __param(1, type_graphql_1.Arg("value", () => type_graphql_1.Int)),
     __param(2, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number, Number, Object]),
@@ -182,7 +184,7 @@ __decorate([
 ], PostResolver.prototype, "posts", null);
 __decorate([
     type_graphql_1.Query(() => Post_1.Post, { nullable: true }),
-    __param(0, type_graphql_1.Arg("id")),
+    __param(0, type_graphql_1.Arg("id", () => type_graphql_1.Int)),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
