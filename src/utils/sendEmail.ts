@@ -14,7 +14,7 @@ export async function sendEmail(to: string, html: string) {
   let info = await transporter.sendMail({
     from: '"Jacob Marthaller Portfolio Site" <jacob@jacob.com>',
     to: to,
-    subject: "Thanks for checking out Jacob Marthaller's Potfolio Site!",
+    subject: "Thanks for visiting my Potfolio Site!",
     html,
   });
 
