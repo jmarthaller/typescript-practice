@@ -37,11 +37,10 @@ class UserResponse {
 
 @Resolver(User)
 export class UserResolver {
-
   @FieldResolver(() => String)
-  email(@Root() user: User, @Ctx() {req}: MyContext) {
+  email(@Root() user: User, @Ctx() { req }: MyContext) {
     if (req.session.userId === user.id) {
-      return user.email
+      return user.email;
     }
     return "";
   }
