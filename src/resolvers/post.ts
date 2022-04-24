@@ -137,24 +137,7 @@ export class PostResolver {
       replacements
     );
 
-    // const qb = getConnection()
-    //   .getRepository(Post)
-    //   .createQueryBuilder("post")
-    //   .innerJoinAndSelect(
-    //     "post.creator",
-    //     "u",
-    //     'u.id = post."CreatorId"',
-    //   )
-    //   .orderBy('post."createdAt"', "DESC")
-    //   .take(realLimitPlusOne);
-
-    // if (cursor) {
-    //   qb.where('post."createdAt" < :cursor', {
-    //     cursor: new Date(parseInt(cursor))
-    //   });
-    // }
-
-    // const posts = await qb.getMany();
+   
 
     return {
       posts: posts.slice(0, realLimit),
