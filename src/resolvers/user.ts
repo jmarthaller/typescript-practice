@@ -205,7 +205,6 @@ export class UserResolver {
         ],
       };
     }
-    // changed type to accept any
     req.session.userId = user.id;
     return {
       user,
