@@ -1,11 +1,10 @@
-
 import "reflect-metadata";
 import express from "express";
 import Redis from "ioredis";
 import session from "express-session";
 import connectRedis from "connect-redis";
 import cors from "cors";
-import path from 'path';
+import path from "path";
 import { createConnection } from "typeorm";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
@@ -25,10 +24,10 @@ const main = async () => {
     password: "postgres",
     logging: true,
     synchronize: true,
-    migrations: [path.join(__dirname, './migrations/* ')],
+    migrations: [path.join(__dirname, "./migrations/* ")],
     entities: [Post, User, Upvote],
   });
-  await connection.runMigrations()
+  await connection.runMigrations();
   // await Post.delete({})
 
   const app = express();
