@@ -50,6 +50,7 @@ const main = async () => {
         disableTouch: true,
       }),
       cookie: {
+        // set cookie for five years
         maxAge: 1000 * 60 * 60 * 24 * 365 * 5,
         httpOnly: true,
         sameSite: "lax",
