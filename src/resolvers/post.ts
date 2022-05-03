@@ -82,7 +82,6 @@ export class PostResolver {
         `,
           [userId, postId, realValue]
         );
-
         await tm.query(
           `
           update post
