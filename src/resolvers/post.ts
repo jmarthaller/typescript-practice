@@ -93,20 +93,7 @@ export class PostResolver {
         );
       });
     }
-
-    // await getConnection().query(`
-    //   START TRANSACTION;
-    //   insert into upvote ("userId", "postId", value)
-    //   values (${userId},${postId},${realValue});
-    //   update post
-    //   set points = points + ${realValue}
-    //   where id = ${postId};
-    //   COMMIT;
-    // `);
-
-    // return true;
   }
-
   @Query(() => PaginatedPosts)
   async posts(
     @Arg("limit", () => Int) limit: number,
@@ -115,16 +102,13 @@ export class PostResolver {
   ): Promise<PaginatedPosts> {
     const realLimit = Math.min(50, limit);
     const realLimitPlusOne = realLimit + 1;
-
     const replacements: any[] = [realLimitPlusOne];
-
     let cursorIndex = 3;
 
     if (req.session.userId) {
       replacements.push(req.session.userId);
       cursorIndex = replacements.length;
     }
-
     if (cursor) {
       replacements.push(new Date(parseInt(cursor)));
     }
